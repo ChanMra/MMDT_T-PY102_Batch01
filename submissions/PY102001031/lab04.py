@@ -51,21 +51,24 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     returns: root TreeNode
     """
     # TODO
-    base_path = "submissions"
+    # raise NotImplementedError
+
     root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
-    root.left = TreeNode(folder1)
+    folder1_node = TreeNode(folder1)
+    folder2_node = TreeNode(folder2)
 
+    root.left = folder1_node
+    root.right = folder2_node
 
-    folder2 = "PY102001007"
-    root.right = TreeNode(folder2)
+    fileA = TreeNode("fileA")
+    fileB = TreeNode("fileB")
+    folder1_node.left = fileA
+    folder1_node.right = fileB
 
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
+    fileC = TreeNode("fileC")
+    fileD = TreeNode("fileD")
+    folder2_node.left = fileC
+    folder2_node.right = fileD
 
     return root
 
@@ -90,9 +93,10 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
-    for value in preorder(root):
+    # raise NotImplementedError("Implement Q2 here.")
+    nodes = preorder(root)  # use provided traversal
+    for value in nodes:
         print(value)
-    
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -113,21 +117,29 @@ def find_py_files(root: TreeNode) -> list[str]:
     Traverse the tree and return a list of all '.py' files.
     root: the TreeNode returned from build_submission_tree
     """
-    result = []
-    current_folder = None
+    # raise NotImplementedError("Implement Q3 here.")
 
-    for value in preorder(root):
-        if value == "submissions":
+    result = []
+    nodes = preorder(root)
+
+    folders = []
+    folders.append(root.left.value)
+    folders.append(root.right.value)
+
+    current_folder = folders[0]
+    file_count = 0
+
+    for value in nodes:
+        if value == "submissions" or value in folders:
             continue
 
-        elif "." not in value:
-            current_folder = value
+        file_count += 1
 
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
+        if value.endswith(".py"):
+            result.append(current_folder + "/" + value)
+
+        if file_count == 2:
+            current_folder = folders[1]
 
     return result
-
- 
-
  

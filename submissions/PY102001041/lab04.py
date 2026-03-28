@@ -50,22 +50,42 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     folder2: name of your friend's folder inside submissions
     returns: root TreeNode
     """
-    # TODO
-    base_path = "submissions"
+    # define vars
     root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
     root.left = TreeNode(folder1)
-
-
-    folder2 = "PY102001007"
     root.right = TreeNode(folder2)
 
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
+    import os
+
+    # link all files in f1
+    path1 = os.path.join(base_path, folder1)
+    f1_files = [f for f in os.listdir(path1) if os.path.isfile(os.path.join(path1, f))]
+
+    next = None
+    for i, file in enumerate(f1_files):
+        node = TreeNode(file)
+
+        if i == 0:
+            root.left.left = node
+        else:
+            next.right = node       
+
+        next = node
+
+    # link all files in f2
+    path2 = os.path.join(base_path, folder2)
+    f2_files = [f for f in os.listdir(path2) if os.path.isfile(os.path.join(path2, f))]
+
+    next = None
+    for i, file in enumerate(f2_files):
+        node = TreeNode(file)
+
+        if i == 0:
+            root.right.left = node
+        else:
+            next.right = node
+
+        next = node
 
     return root
 
@@ -90,9 +110,10 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
-    for value in preorder(root):
-        print(value)
-    
+    tree = postorder(root)
+
+    for v in tree:
+        print(v.value)
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -113,21 +134,35 @@ def find_py_files(root: TreeNode) -> list[str]:
     Traverse the tree and return a list of all '.py' files.
     root: the TreeNode returned from build_submission_tree
     """
-    result = []
-    current_folder = None
+    # use preorder
+    all_nodes = preorder(root)
+    out_list = []
 
-    for value in preorder(root):
-        if value == "submissions":
-            continue
+    # set curr folder to none
+    curr_f = ""
 
-        elif "." not in value:
-            current_folder = value
+    for node in all_nodes:
+        # print (f"node val is {node}")
+        
+        if node != root.value and "." not in node:
+            curr_f = node.split("\\")[-1]
+        elif node.endswith(".py"):
+            out_list.append(curr_f + "/" + node)
 
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
-
-    return result
-
+    return out_list
+        
  
 
- 
+# # test case
+# startf = r"D:\mmdt\MMDT_T-PY102_Batch01\submissions"
+# leftf = r"D:\mmdt\MMDT_T-PY102_Batch01\submissions\PY102001041"
+# rightf = r"D:\mmdt\MMDT_T-PY102_Batch01\submissions\PY102001042"
+
+# main_tree = build_submission_tree(startf, leftf, rightf)
+# print (main_tree)
+
+
+# print(preorder(main_tree))
+
+# print ("preorder printing DoneQ!\n")
+# print(find_py_files(main_tree))

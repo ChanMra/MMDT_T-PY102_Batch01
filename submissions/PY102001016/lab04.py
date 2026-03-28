@@ -51,25 +51,22 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     returns: root TreeNode
     """
     # TODO
-    base_path = "submissions"
+    #raise NotImplementedError
     root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
-    root.left = TreeNode(folder1)
 
+    node1 = TreeNode(folder1)
+    node2 = TreeNode(folder2)
 
-    folder2 = "PY102001007"
-    root.right = TreeNode(folder2)
+    root.left = node1
+    root.right = node2
 
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
+    node1.left = TreeNode('lab00.py')
+    node1.right = TreeNode('lab01.py')
+
+    node2.left = TreeNode('lab00.py')
+    node2.right = TreeNode('lab01.py')
 
     return root
-
-
 # -------------------------
 # Q2 — Visit All Nodes Using Tree Traversal (Print Everything)
 #
@@ -90,10 +87,10 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
-    for value in preorder(root):
-        print(value)
-    
+    nodes = preorder(root)
 
+    for node in nodes:
+        print(node)
 # -------------------------
 # Q3 — Find All Python Files (.py)
 #
@@ -114,20 +111,19 @@ def find_py_files(root: TreeNode) -> list[str]:
     root: the TreeNode returned from build_submission_tree
     """
     result = []
-    current_folder = None
+    nodes = preorder(root)
 
-    for value in preorder(root):
-        if value == "submissions":
+    current_folder = ''
+
+    for node in nodes:
+
+        if node == 'submissions':
             continue
 
-        elif "." not in value:
-            current_folder = value
-
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
+        elif node.endswith('.py'):
+            result.append(current_folder+'/'+node)
+            
+        else:
+            current_folder= node
 
     return result
-
- 
-
- 

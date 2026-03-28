@@ -50,25 +50,18 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     folder2: name of your friend's folder inside submissions
     returns: root TreeNode
     """
-    # TODO
-    base_path = "submissions"
-    root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
-    root.left = TreeNode(folder1)
+    # Folder 1: PY102001030
+    file1_a = TreeNode("Lab01.py")
+    file1_b = TreeNode("Lab02.py")
+    node_folder1 = TreeNode(folder1, file1_a, file1_b)
 
+    # Folder 2: PY102001029
+    file2_a = TreeNode("Lab01.py")
+    file2_b = TreeNode("Lab02.py")
+    node_folder2 = TreeNode(folder2, file2_a, file2_b)
 
-    folder2 = "PY102001007"
-    root.right = TreeNode(folder2)
-
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
-
-    return root
-
+    # Root: submissions
+    return TreeNode(base_path, node_folder1, node_folder2)
 
 # -------------------------
 # Q2 — Visit All Nodes Using Tree Traversal (Print Everything)
@@ -90,9 +83,11 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
-    for value in preorder(root):
+    # Using the provided preorder function from your snippet
+    # We use the preorder function defined at the top of your snippet
+    nodes = preorder(root)
+    for value in nodes:
         print(value)
-    
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -113,21 +108,8 @@ def find_py_files(root: TreeNode) -> list[str]:
     Traverse the tree and return a list of all '.py' files.
     root: the TreeNode returned from build_submission_tree
     """
-    result = []
-    current_folder = None
-
-    for value in preorder(root):
-        if value == "submissions":
-            continue
-
-        elif "." not in value:
-            current_folder = value
-
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
-
-    return result
-
- 
-
+    all_values = preorder(root)
+    return [val for val in all_values if val.endswith(".py")]
+    
+    return py_files
  

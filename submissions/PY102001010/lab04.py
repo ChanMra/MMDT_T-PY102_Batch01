@@ -44,31 +44,13 @@ def postorder(root):
 # -------------------------
 
 def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNode:
-    """
-    base_path: "submissions"
-    folder1: name of your folder inside submissions
-    folder2: name of your friend's folder inside submissions
-    returns: root TreeNode
-    """
-    # TODO
-    base_path = "submissions"
-    root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
-    root.left = TreeNode(folder1)
+    f1_files = TreeNode("intro.py", left=TreeNode("lab1.py"))
+    f2_files = TreeNode("project.py", right=TreeNode("test.py"))
 
-
-    folder2 = "PY102001007"
-    root.right = TreeNode(folder2)
-
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
-
+    root = TreeNode(base_path, left=TreeNode(folder1, left=f1_files),
+                    right=TreeNode(folder2, left=f2_files))
     return root
-
+    raise NotImplementedError
 
 # -------------------------
 # Q2 — Visit All Nodes Using Tree Traversal (Print Everything)
@@ -86,13 +68,8 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
 # -------------------------
 
 def print_all_nodes(root: TreeNode) -> None:
-    """
-    Traverse the tree and print the value stored in EVERY node.
-    root: the TreeNode returned from build_submission_tree
-    """
-    for value in preorder(root):
-        print(value)
-    
+    for val in preorder(root):
+        print(val)
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -109,25 +86,8 @@ def print_all_nodes(root: TreeNode) -> None:
 # -------------------------
 
 def find_py_files(root: TreeNode) -> list[str]:
-    """
-    Traverse the tree and return a list of all '.py' files.
-    root: the TreeNode returned from build_submission_tree
-    """
-    result = []
-    current_folder = None
+    def find_py_files(root: TreeNode) -> list[str]:
+        return [val for val in preorder(root) if val.endswith(".py")]
 
-    for value in preorder(root):
-        if value == "submissions":
-            continue
-
-        elif "." not in value:
-            current_folder = value
-
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
-
-    return result
-
- 
-
- 
+    # raise NotImplementedError("Implement Q3 here.")
+    

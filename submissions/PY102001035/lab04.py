@@ -50,25 +50,17 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     folder2: name of your friend's folder inside submissions
     returns: root TreeNode
     """
-    # TODO
-    base_path = "submissions"
     root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
     root.left = TreeNode(folder1)
-
-
-    folder2 = "PY102001007"
     root.right = TreeNode(folder2)
-
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
+    root.left.left = TreeNode("lab00.py")
+    root.left.right = TreeNode("lab01.py")
+    root.right.left = TreeNode("lab00.py")
+    root.right.right = TreeNode("lab01.py")
 
     return root
-
+    # TODO
+    raise NotImplementedError
 
 # -------------------------
 # Q2 — Visit All Nodes Using Tree Traversal (Print Everything)
@@ -90,9 +82,11 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
-    for value in preorder(root):
-        print(value)
-    
+    all_nodes = preorder(root)
+    for node in all_nodes:
+        print(node)
+    raise NotImplementedError("Implement Q2 here.")
+
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -113,21 +107,21 @@ def find_py_files(root: TreeNode) -> list[str]:
     Traverse the tree and return a list of all '.py' files.
     root: the TreeNode returned from build_submission_tree
     """
-    result = []
-    current_folder = None
+    all_nodes = postorder(root)
+    tmp = []
+    py_files = []
 
-    for value in preorder(root):
-        if value == "submissions":
-            continue
+    for node in all_nodes:
+        if node.endswith(".py"):
+            tmp.append(node)
+        else:
+            while(tmp):
+                file_path = node + "/" + tmp.pop()
+                py_files.append(file_path)
 
-        elif "." not in value:
-            current_folder = value
+    return py_files
+    raise NotImplementedError("Implement Q3 here.")
 
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
-
-    return result
-
- 
-
- 
+# myNode = build_submission_tree("submissions","PY102001035", "PY102001036")
+# print_all_nodes(myNode)
+# print(find_py_files(myNode))

@@ -50,25 +50,28 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     folder2: name of your friend's folder inside submissions
     returns: root TreeNode
     """
-    # TODO
-    base_path = "submissions"
+    # Create the root node for submission
     root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
-    root.left = TreeNode(folder1)
 
+    # Create nodes for two student's folder submission
+    # Left Branch (PY102001019)
+    f1_node = TreeNode(folder1)
+    f1_node.left = TreeNode("lab00.py")
+    f1_node.right = TreeNode("lab01.py")
 
-    folder2 = "PY102001007"
-    root.right = TreeNode(folder2)
+    # Right Branch (PY102001007)
+    f2_node = TreeNode(folder2)
+    f2_node.left = TreeNode("lab00.py")
+    f2_node.right = TreeNode("lab01.py")
 
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
+    # Attach student folders to the root
+    root.left = f1_node
+    root.right = f2_node
 
-    return root
+    return root 
 
+# Initializing with the specific folder names
+root_node = build_submission_tree("submissions", "PY102001019", "PY102001007")
 
 # -------------------------
 # Q2 — Visit All Nodes Using Tree Traversal (Print Everything)
@@ -90,9 +93,12 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
-    for value in preorder(root):
+    nodes = preorder(root)
+
+    for value in nodes:
         print(value)
-    
+
+print_all_nodes(root_node)
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -107,27 +113,37 @@ def print_all_nodes(root: TreeNode) -> None:
 # - Example return:
 #     ["folderA/file1.py", "folderB/main.py"]
 # -------------------------
+    
 
 def find_py_files(root: TreeNode) -> list[str]:
     """
-    Traverse the tree and return a list of all '.py' files.
-    root: the TreeNode returned from build_submission_tree
+    Traverse the tree and return a list of all '.py' files 
+    formatted as 'foldername/filename.py'.
     """
-    result = []
-    current_folder = None
+    python_files = []
 
-    for value in preorder(root):
-        if value == "submissions":
-            continue
+    # Helper function for recursion that keeps track of the 'current_folder'
+    def traverse(node, current_folder):
+        if not node:
+            return
 
-        elif "." not in value:
-            current_folder = value
+        # Check if the node is a student folder 
+        if node.value.startswith("PY"):
+            new_folder_context = node.value
+        else:
+            new_folder_context = current_folder
 
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
+        # If it's a .py file, format it with the current folder context
+        if node.value.endswith(".py"):
+            if new_folder_context:
+                python_files.append(f"{new_folder_context}/{node.value}")
+            else:
+                python_files.append(node.value)
 
-    return result
+        # Recurse to children
+        traverse(node.left, new_folder_context)
+        traverse(node.right, new_folder_context)
 
- 
-
- 
+    # Start traversal
+    traverse(root, None)
+    return python_files

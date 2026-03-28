@@ -1,6 +1,9 @@
 # -------------------------
 # Do not change the below Code
 # -------------------------
+import os
+
+
 class TreeNode:
     def __init__(self, value: str, left = None, right = None):
         self.value = value
@@ -51,24 +54,27 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     returns: root TreeNode
     """
     # TODO
-    base_path = "submissions"
-    root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
-    root.left = TreeNode(folder1)
+#    raise NotImplementedError
+    root = TreeNode("submissions")
+    def folder_node(folder_name: str) -> TreeNode:
+        folder_path = os.path.join(base_path, folder_name)
+        # Only include files, ignore subfolders
+        files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+        folder = TreeNode(folder_name)
+        # Attach files as linked nodes (left first, right for siblings)
+        current = None
+        for f in files:
+            node = TreeNode(f)
+            if not folder.left:
+                folder.left = node
+            else:
+                current.right = node
+            current = node
+        return folder
 
-
-    folder2 = "PY102001007"
-    root.right = TreeNode(folder2)
-
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
-
+    root.left = folder_node(folder1)
+    root.right = folder_node(folder2)
     return root
-
 
 # -------------------------
 # Q2 — Visit All Nodes Using Tree Traversal (Print Everything)
@@ -90,9 +96,9 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
+    # raise NotImplementedError("Implement Q2 here.")
     for value in preorder(root):
         print(value)
-    
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -113,21 +119,33 @@ def find_py_files(root: TreeNode) -> list[str]:
     Traverse the tree and return a list of all '.py' files.
     root: the TreeNode returned from build_submission_tree
     """
-    result = []
-    current_folder = None
+    # raise NotImplementedError("Implement Q3 here.")
+    py_files = []
 
-    for value in preorder(root):
-        if value == "submissions":
-            continue
+    def helper(node: TreeNode, path: str):
+        if not node:
+            return
+        # Build current path
+        current_path = f"{path}/{node.value}" if path else node.value
+        # Leaf node ending with .py
+        if not node.left and not node.right and node.value.endswith(".py"):
+            py_files.append(current_path)
+        helper(node.left, current_path)
+        helper(node.right, current_path)
 
-        elif "." not in value:
-            current_folder = value
+    helper(root, "")
+    return py_files
+if __name__ == "__main__":
+    base = "submissions"
+    my_id = "PY102001022"
+    friend_id = "PY102001020"  # Your friend’s folder
 
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
+    root = build_submission_tree(base, my_id, friend_id)
 
-    return result
+    print("All nodes in the submission tree:")
+    print_all_nodes(root)
 
- 
-
+    py_files = find_py_files(root)
+    print("\nPython files found:")
+    print(py_files)
  

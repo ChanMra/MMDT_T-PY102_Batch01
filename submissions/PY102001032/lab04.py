@@ -51,24 +51,18 @@ def build_submission_tree(base_path: str, folder1: str, folder2: str) -> TreeNod
     returns: root TreeNode
     """
     # TODO
-    base_path = "submissions"
-    root = TreeNode(base_path)
-    
-    folder1 = "PY102001006"
-    root.left = TreeNode(folder1)
+    folder1_file1 = TreeNode("lab00.py")
+    folder1_file2 = TreeNode("lab01.py")
 
+    folder2_file1 = TreeNode("lab00.py")
+    folder2_file2 = TreeNode("lab01.py")
 
-    folder2 = "PY102001007"
-    root.right = TreeNode(folder2)
+    folder1_tree = TreeNode(folder1, left=folder1_file1, right=folder1_file2)
+    folder2_tree = TreeNode(folder2, left=folder2_file1, right=folder2_file2)
 
-    root.left.left = TreeNode("lab01.py")
-    root.left.right = TreeNode("lab02.py")
-    
-    root.right.left = TreeNode("lab01.py")
-    root.right.right = TreeNode("lab02.py")
+    root_tree = TreeNode(base_path, left=folder1_tree, right=folder2_tree)
 
-    return root
-
+    return root_tree
 
 # -------------------------
 # Q2 — Visit All Nodes Using Tree Traversal (Print Everything)
@@ -90,9 +84,8 @@ def print_all_nodes(root: TreeNode) -> None:
     Traverse the tree and print the value stored in EVERY node.
     root: the TreeNode returned from build_submission_tree
     """
-    for value in preorder(root):
-        print(value)
-    
+    for data in preorder(root):
+        print(data)
 
 # -------------------------
 # Q3 — Find All Python Files (.py)
@@ -113,21 +106,17 @@ def find_py_files(root: TreeNode) -> list[str]:
     Traverse the tree and return a list of all '.py' files.
     root: the TreeNode returned from build_submission_tree
     """
-    result = []
-    current_folder = None
+     
+    data = preorder(root)
 
-    for value in preorder(root):
-        if value == "submissions":
-            continue
+    search_folders = data[1:]
 
-        elif "." not in value:
-            current_folder = value
-
-        elif value.endswith(".py"):
-            result.append(f"{current_folder}/{value}")
-
-    return result
-
- 
-
+    root_subfolder = ""
+    file_list = []
+    for data in search_folders:
+        if data.endswith('.py'):
+            file_list.append(root_subfolder + "/" + data)
+        else: 
+            root_subfolder = data
+    return file_list
  
